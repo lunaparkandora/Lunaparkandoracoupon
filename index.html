@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Luna Park Andora - I tuoi Coupon</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      color: #333;
+    }
+    .coupon {
+      border: 2px dashed #0077b6;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .coupon h3 {
+      margin: 0 0 5px;
+    }
+    .offer {
+      font-style: italic;
+      margin: 0 0 10px;
+      color: #0077b6;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #0077b6;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #005f8a;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .status {
+      margin-top: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎡 Luna Park Andora - I tuoi Coupon Estate 2025 🎟️</h1>
+
+  <div id="coupons"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const couponsContainer = document.getElementById('coupons');
+      const HOURS = 24;
+      const MS = 60 * 60 * 1000;
+
+      const couponNumbers = [
+        51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+        61, 64, 65, 66, 68, 70, 71, 72, 74, 75,
+        76, 77, 78, 81, 98, 99, 100, 101
+      ];
+
+      const couponNames = [
+        'AUTOPISTA', 'MINI CATENE', 'GIOSTRA CATENE', 'MINI AUTOPISTA', 'GIOSTRA DI HULK',
+        'CIRCUS', 'TABOGA', 'BRUCO', 'TAPPETI ELASTICI', 'GIOSTRA TAGADA',
+        'SIMULATORE', 'TIRO BARATTOLI', 'DERBY DAY', 'CANOE', 'WATER BALL',
+        'SPACCA TUTTO', 'ROTONDA CIGNI', 'ROTONDA PESCA', 'TARGET', 'NIGHT AND DAY',
+        'PLAYGROUND', 'TOP SPIN', 'GIOSTRA NOVITÀ', 'TIRO FUCILI E PISTOLE', 'BANCO DOLCIUMI',
+        'ROTONDA OPLÀ', 'CALCIO DI RIGORE', 'CINEMA VISION'
+      ];
+
+      const couponOffers = [
+        'PRENDI 2 PAGHI 1', 'PRENDI 2 PAGHI 1', 'PRENDI 2 PAGHI 1', 'PRENDI 2 PAGHI 1', 'SCONTO 0,50€ SU UN GIRO',
+        'SCONTO 0,50€ SU UN INGRESSO', 'PRENDI 2 PAGHI 1', 'PRENDI 2 PAGHI 1', '2 MINUTI EXTRA SU ABBONAMENTO', 'SCONTO 1€ SU UN GIRO',
+        'SCONTO 0,50€ SU UN GIRO', '2 PALLINE IN OMAGGIO SU 1 GIOCATA', '1 GETTONE OMAGGIO SU 1 ABBONAMENTO', 'PRENDI 2 PAGHI 1', 'SCONTO 1€ SU UN GIRO',
+        'SCONTO 1€ SU UN ABBONAMENTO', '5 PESCATE OMAGGIO SU UN ABBONAMENTO', '5 PESCATE OMAGGIO SU UN ABBONAMENTO', '10 COLPI IN OMAGGIO SU UN ABBONAMENTO DA 10€',
+        '20 GETTONI OMAGGIO SU UN ABBONAMENTO', 'SCONTO 1€ SU UN ABBONAMENTO', 'SCONTO 1€ SU UN GIRO', 'SCONTO 1€ SU UN GIRO', '10 COLPI IN OMAGGIO SU UN ABBONAMENTO DA 10€',
+        'SCONTO 0,50€ SUL TUO ACQUISTO', '5 ANELLI OMAGGIO SU UN ABBONAMENTO', '1 TIRO OMAGGIO SU UN ABBONAMENTO', 'SCONTO 0,50€ SU UN INGRESSO'
+      ];
+
+      for (let i = 0; i < couponNumbers.length; i++) {
+        const couponId = `coupon${couponNumbers[i]}`;
+        const couponKey = `${couponId}_lastUsed`;
+
+        const div = document.createElement('div');
+        div.className = 'coupon';
+
+        const title = document.createElement('h3');
+        title.textContent = `#${couponNumbers[i]} - ${couponNames[i]}`;
+
+        const offer = document.createElement('p');
+        offer.className = 'offer';
+        offer.textContent = `Offerta: ${couponOffers[i]}`;
+
+        const button = document.createElement('button');
+        button.textContent = 'Usa ora';
+        button.id = `btn_${couponId}`;
+
+        const status = document.createElement('div');
+        status.className = 'status';
+        status.id = `status_${couponId}`;
+
+        div.appendChild(title);
+        div.appendChild(offer);
+        div.appendChild(button);
+        div.appendChild(status);
+        couponsContainer.appendChild(div);
+
+        function updateStatus() {
+          const lastUsed = localStorage.getItem(couponKey);
+          const now = Date.now();
+
+          if (lastUsed && now - lastUsed < HOURS * MS) {
+            const remaining = Math.ceil((HOURS * MS - (now - lastUsed)) / MS);
+            button.disabled = true;
+            status.textContent = `🔒 Bloccato! Disponibile tra ${remaining} ore`;
+          } else {
+            button.disabled = false;
+            status.textContent = '✅ Disponibile';
+          }
+        }
+
+        button.addEventListener('click', () => {
+          const confirmUse = confirm(`Sei sicuro di voler usare il coupon #${couponNumbers[i]} - ${couponNames[i]}?\nOfferta: ${couponOffers[i]}\n\nDopo non potrai riutilizzarlo per 24 ore!`);
+          if (confirmUse) {
+            localStorage.setItem(couponKey, Date.now());
+            updateStatus();
+            alert(`🎉 Coupon #${couponNumbers[i]} - ${couponNames[i]} usato!\nOfferta: ${couponOffers[i]}\nBloccato per 24 ore.`);
+          }
+        });
+
+        updateStatus();
+      }
+    });
+  </script>
+</body>
+</html>
+
