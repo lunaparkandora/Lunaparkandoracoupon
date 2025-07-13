@@ -2,147 +2,420 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>Luna Park Andora - I tuoi Coupon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luna Park Andora - Coupon Estate 2025</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Balsamiq+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
+      font-family: 'Balsamiq Sans', cursive, Arial, sans-serif;
+      background: #FFFBE6;
       padding: 20px;
-      max-width: 800px;
+      max-width: 1200px;
       margin: auto;
+      font-size: 18px;
     }
     h1 {
-      color: #333;
+      font-family: 'Pacifico', cursive;
+      text-align: center;
+      color: #6C46A1;
+      font-size: 3.5em;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    /* Stile per la barra di ricerca */
+    #search-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    #coupon-search {
+      padding: 12px 20px;
+      width: 80%;
+      max-width: 500px;
+      border: 2px solid #0077B6;
+      border-radius: 50px;
+      font-size: 1.1em;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    #coupon-search:focus {
+      border-color: #FF6B35;
+      box-shadow: 0 0 0 3px rgba(255,107,53,0.3);
+    }
+
+    #coupons {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 40px;
+      margin-top: 30px;
     }
     .coupon {
-      border: 2px dashed #0077b6;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 8px;
+      border: 2px dashed #0077B6;
+      border-radius: 12px;
+      overflow: hidden;
       background: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 30px;
+      position: relative;
+      transition: all 0.3s ease, filter 0.5s ease;
     }
-    .coupon h3 {
-      margin: 0 0 5px;
+    .coupon:hover:not(.used) {
+      transform: scale(1.03);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .coupon.used::before {
+      content: '✖';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 8em;
+      color: rgba(255, 0, 0, 0.6);
+      z-index: 10;
+      pointer-events: none;
+      animation: appearAndRotate 0.5s ease-out forwards;
+    }
+
+    @keyframes appearAndRotate {
+      0% {
+        transform: translate(-50%, -50%) scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      70% {
+        transform: translate(-50%, -50%) scale(1.1) rotate(30deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .coupon.used {
+      opacity: 0.6;
+      filter: grayscale(80%) blur(1px);
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+    .coupon.shake {
+      animation: shake 0.3s ease-in-out;
+    }
+
+    .coupon-content {
+      padding: 15px;
+      text-align: center;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .coupon-content h3 {
+      font-family: 'Balsamiq Sans', cursive;
+      margin: 5px 0;
+      font-size: 26px;
+      color: #0077B6;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
     .offer {
-      font-style: italic;
       margin: 0 0 10px;
-      color: #0077b6;
+      font-style: italic;
+      color: #FF6B35;
+      font-size: 1.2em;
     }
     button {
-      padding: 15px 30px;
+      padding: 14px 30px;
       font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      background-color: #0077b6;
+      background: #0077B6;
       color: #fff;
       border: none;
-      border-radius: 5px;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      font-weight: bold;
     }
-    button:hover {
-      background-color: #005f8a;
+    button:hover:not(:disabled) {
+      background: #005f8a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0,0,0,0.3);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
     }
     button:disabled {
       background: #ccc;
       cursor: not-allowed;
+      box-shadow: none;
     }
     .status {
-      margin-top: 8px;
+      margin-top: 10px;
       font-weight: bold;
-      color: #333;
+      font-size: 1.4em;
+    }
+    .status.available {
+      color: #8BD346;
+    }
+    .status.blocked {
+      color: #E63946;
+    }
+
+    .disclaimer {
+      margin-top: 40px;
+      padding: 20px;
+      font-size: 1.1em;
+      color: #555;
+      background: #fff;
+      border-left: 4px solid #FF6B35;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      padding: 15px;
+      font-size: 1em;
+      color: #777;
+      border-top: 1px solid #eee;
+    }
+
+    /* Media Queries per dispositivi mobili */
+    @media (max-width: 768px) {
+      body {
+        font-size: 16px;
+      }
+      h1 {
+        font-size: 2.5em;
+      }
+      #coupon-search {
+        width: 90%; /* Aumenta la larghezza della barra di ricerca su mobile */
+      }
+      #coupons {
+        grid-template-columns: repeat(2, 1fr); /* 2 colonne per schermi fino a 768px */
+        gap: 20px;
+      }
+      .coupon-content h3 {
+        font-size: 20px;
+      }
+      .offer {
+        font-size: 1em;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+      }
+      .status {
+        font-size: 1.1em;
+      }
+      .disclaimer {
+        font-size: 0.95em;
+      }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 2em;
+        }
+        #coupons {
+            grid-template-columns: 1fr; /* Torna a 1 colonna per schermi molto stretti */
+            gap: 20px;
+        }
+        .coupon-content h3 {
+            font-size: 22px;
+        }
+        .offer {
+            font-size: 1.1em;
+        }
+        button {
+            font-size: 17px;
+            padding: 12px 25px;
+        }
+        .status {
+            font-size: 1.2em;
+        }
+        .disclaimer {
+            font-size: 0.9em;
+        }
     }
   </style>
 </head>
 <body>
-  <h1>🎡 Luna Park Andora - I tuoi Coupon Estate 2025 🎟️</h1>
+  <h1>🎡 Luna Park Andora - Coupon Estate 2025 🎟️</h1>
+
+  <div id="search-container">
+    <input type="text" id="coupon-search" placeholder="Cerca coupon per numero o nome...">
+  </div>
 
   <div id="coupons"></div>
+
+  <div class="disclaimer">
+    ⚠️ <strong>Regolamento:</strong> Ogni coupon è personale, non cedibile e utilizzabile una sola volta ogni 24 ore per persona.
+    In caso di abuso, il Luna Park si riserva il diritto di invalidare i coupon non conformi.
+  </div>
+
+  <footer>
+    Pagina realizzata da Bellotti Alan
+  </footer>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const couponsContainer = document.getElementById('coupons');
+      const searchInput = document.getElementById('coupon-search');
       const HOURS = 24;
       const MS = 60 * 60 * 1000;
 
-      const couponNumbers = [
-        51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-        61, 64, 65, 66, 68, 70, 71, 72, 74, 75,
-        76, 77, 78, 81, 98, 99, 100, 101
+      const couponData = [
+        { number: 51, name: 'AUTOPISTA', offer: 'PRENDI 2 PAGHI 1' },
+        { number: 52, name: 'MINI CATENE', offer: 'PRENDI 2 PAGHI 1' },
+        { number: 53, name: 'GIOSTRA CATENE', offer: 'PRENDI 2 PAGHI 1' },
+        { number: 54, name: 'MINI AUTOPISTA', offer: 'PRENDI 2 PAGHI 1' },
+        { number: 55, name: 'GIOSTRA DI HULK', offer: 'SCONTO 0,50€ SU UN GIRO' },
+        { number: 56, name: 'CIRCUS', offer: 'SCONTO 0,50€ SU UN INGRESSO' },
+        { number: 57, name: 'TABOGA', offer: 'PRENDI 2 PAGHI 1' },
+        { number: 58, name: 'BRUCO', offer: 'PRENDI 2 PAGHI 1' },
+        { number: 59, name: 'TAPPETI ELASTICI', offer: '2 MINUTI EXTRA SU ABBONAMENTO' },
+        { number: 60, name: 'GIOSTRA TAGADA', offer: 'SCONTO 1€ SU UN GIRO' },
+        { number: 61, name: 'SIMULATORE', offer: 'SCONTO 0,50€ SU UN GIRO' },
+        { number: 64, name: 'TIRO BARATTOLI', offer: '2 PALLINE IN OMAGGIO SU 1 GIOCATA' },
+        { number: 65, name: 'DERBY DAY', offer: '1 GETTONE OMAGGIO SU 1 ABBONAMENTO' },
+        { number: 66, name: 'CANOE', offer: 'PRENDI 2 PAGHI 1' },
+        { number: 68, name: 'WATER BALL', offer: 'SCONTO 1€ SU UN GIRO' },
+        { number: 70, name: 'SPACCA TUTTO', offer: 'SCONTO 1€ SU UN ABBONAMENTO' },
+        { number: 71, name: 'ROTONDA CIGNI', offer: '5 PESCATE OMAGGIO SU UN ABBONAMENTO' },
+        { number: 72, name: 'ROTONDA PESCA', offer: '5 PESCATE OMAGGIO SU UN ABBONAMENTO' },
+        { number: 74, name: 'TARGET', offer: '10 COLPI IN OMAGGIO SU UN ABBONAMENTO DA 10€' },
+        { number: 75, name: 'NIGHT AND DAY', offer: '20 GETTONI OMAGGIO SU UN ABBONAMENTO' },
+        { number: 76, name: 'PLAYGROUND', offer: 'SCONTO 1€ SU UN ABBONAMENTO' },
+        { number: 77, name: 'TOP SPIN', offer: 'SCONTO 1€ SU UN GIRO' },
+        { number: 78, name: 'GIOSTRA NOVITÀ', offer: 'SCONTO 1€ SU UN GIRO' },
+        { number: 81, name: 'TIRO FUCILI E PISTOLE', offer: '10 COLPI IN OMAGGIO SU UN ABBONAMENTO DA 10€' },
+        { number: 98, name: 'BANCO DOLCIUMI', offer: 'SCONTO 0,50€ SUL TUO ACQUISTO' },
+        { number: 99, name: 'ROTONDA OPLÀ', offer: '5 ANELLI OMAGGIO SU UN ABBONAMENTO' },
+        { number: 100, name: 'CALCIO DI RIGORE', offer: '1 TIRO OMAGGIO SU UN ABBONAMENTO' },
+        { number: 101, name: 'CINEMA VISION', offer: 'SCONTO 0,50€ SU UN INGRESSO' }
       ];
 
-      const couponNames = [
-        'AUTOPISTA', 'MINI CATENE', 'GIOSTRA CATENE', 'MINI AUTOPISTA', 'GIOSTRA DI HULK',
-        'CIRCUS', 'TABOGA', 'BRUCO', 'TAPPETI ELASTICI', 'GIOSTRA TAGADA',
-        'SIMULATORE', 'TIRO BARATTOLI', 'DERBY DAY', 'CANOE', 'WATER BALL',
-        'SPACCA TUTTO', 'ROTONDA CIGNI', 'ROTONDA PESCA', 'TARGET', 'NIGHT AND DAY',
-        'PLAYGROUND', 'TOP SPIN', 'GIOSTRA NOVITÀ', 'TIRO FUCILI E PISTOLE', 'BANCO DOLCIUMI',
-        'ROTONDA OPLÀ', 'CALCIO DI RIGORE', 'CINEMA VISION'
-      ];
-
-      const couponOffers = [
-        'PRENDI 2 PAGHI 1', 'PRENDI 2 PAGHI 1', 'PRENDI 2 PAGHI 1', 'PRENDI 2 PAGHI 1', 'SCONTO 0,50€ SU UN GIRO',
-        'SCONTO 0,50€ SU UN INGRESSO', 'PRENDI 2 PAGHI 1', 'PRENDI 2 PAGHI 1', '2 MINUTI EXTRA SU ABBONAMENTO', 'SCONTO 1€ SU UN GIRO',
-        'SCONTO 0,50€ SU UN GIRO', '2 PALLINE IN OMAGGIO SU 1 GIOCATA', '1 GETTONE OMAGGIO SU 1 ABBONAMENTO', 'PRENDI 2 PAGHI 1', 'SCONTO 1€ SU UN GIRO',
-        'SCONTO 1€ SU UN ABBONAMENTO', '5 PESCATE OMAGGIO SU UN ABBONAMENTO', '5 PESCATE OMAGGIO SU UN ABBONAMENTO', '10 COLPI IN OMAGGIO SU UN ABBONAMENTO DA 10€',
-        '20 GETTONI OMAGGIO SU UN ABBONAMENTO', 'SCONTO 1€ SU UN ABBONAMENTO', 'SCONTO 1€ SU UN GIRO', 'SCONTO 1€ SU UN GIRO', '10 COLPI IN OMAGGIO SU UN ABBONAMENTO DA 10€',
-        'SCONTO 0,50€ SUL TUO ACQUISTO', '5 ANELLI OMAGGIO SU UN ABBONAMENTO', '1 TIRO OMAGGIO SU UN ABBONAMENTO', 'SCONTO 0,50€ SU UN INGRESSO'
-      ];
-
-      for (let i = 0; i < couponNumbers.length; i++) {
-        const couponId = `coupon${couponNumbers[i]}`;
+      // Funzione per creare un singolo coupon
+      function createCouponElement(data) {
+        const couponId = `coupon${data.number}`;
         const couponKey = `${couponId}_lastUsed`;
 
         const div = document.createElement('div');
         div.className = 'coupon';
+        div.setAttribute('data-coupon-number', data.number); // Aggiunto attributo per la ricerca
+        div.setAttribute('data-coupon-name', data.name.toLowerCase()); // Aggiunto attributo per la ricerca
+
+        const content = document.createElement('div');
+        content.className = 'coupon-content';
 
         const title = document.createElement('h3');
-        title.textContent = `#${couponNumbers[i]} - ${couponNames[i]}`;
+        title.textContent = `${data.number} - ${data.name}`;
+        content.appendChild(title);
 
         const offer = document.createElement('p');
         offer.className = 'offer';
-        offer.textContent = `Offerta: ${couponOffers[i]}`;
+        offer.textContent = data.offer;
+        content.appendChild(offer);
 
         const button = document.createElement('button');
         button.textContent = 'Usa ora';
         button.id = `btn_${couponId}`;
+        content.appendChild(button);
 
         const status = document.createElement('div');
         status.className = 'status';
         status.id = `status_${couponId}`;
+        content.appendChild(status);
 
-        div.appendChild(title);
-        div.appendChild(offer);
-        div.appendChild(button);
-        div.appendChild(status);
-        couponsContainer.appendChild(div);
+        div.appendChild(content);
+
+        let countdownInterval;
 
         function updateStatus() {
           const lastUsed = localStorage.getItem(couponKey);
           const now = Date.now();
-
           if (lastUsed && now - lastUsed < HOURS * MS) {
-            const remaining = Math.ceil((HOURS * MS - (now - lastUsed)) / MS);
             button.disabled = true;
-            status.textContent = `🔒 Bloccato! Disponibile tra ${remaining} ore`;
+            div.classList.add('used');
+            status.classList.remove('available');
+            status.classList.add('blocked');
+
+            if (!countdownInterval) {
+              countdownInterval = setInterval(() => {
+                const updatedNow = Date.now();
+                const remainingTime = (HOURS * MS) - (updatedNow - lastUsed);
+                if (remainingTime <= 0) {
+                  clearInterval(countdownInterval);
+                  countdownInterval = null;
+                  updateStatus();
+                } else {
+                  const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+                  const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+                  const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                  status.textContent = `🔒 Bloccato! ${hours}h ${minutes}m ${seconds}s`;
+                }
+              }, 1000);
+            }
           } else {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
             button.disabled = false;
             status.textContent = '✅ Disponibile';
+            status.classList.remove('blocked');
+            status.classList.add('available');
+            div.classList.remove('used');
           }
         }
 
         button.addEventListener('click', () => {
-          const confirmUse = confirm(`Sei sicuro di voler usare il coupon #${couponNumbers[i]} - ${couponNames[i]}?\nOfferta: ${couponOffers[i]}\n\nDopo non potrai riutilizzarlo per 24 ore!`);
+          const confirmUse = confirm(`Sei sicuro di voler usare il coupon ${data.number} - ${data.name}?\nOfferta: ${data.offer}\n\nDopo non potrai riutilizzarlo per 24 ore!`);
           if (confirmUse) {
             localStorage.setItem(couponKey, Date.now());
             updateStatus();
-            alert(`🎉 Coupon #${couponNumbers[i]} - ${couponNames[i]} usato!\nOfferta: ${couponOffers[i]}\nBloccato per 24 ore.`);
+            alert(`🎉 Coupon ${data.number} - ${data.name} usato!\nOfferta: ${data.offer}\nBloccato per 24 ore.`);
+            div.classList.add('shake');
+            div.addEventListener('animationend', () => {
+              div.classList.remove('shake');
+            }, { once: true });
           }
         });
 
         updateStatus();
+        return div;
       }
+
+      // Inizializzazione dei coupon
+      couponData.forEach(coupon => {
+        couponsContainer.appendChild(createCouponElement(coupon));
+      });
+
+      // Funzione di ricerca
+      searchInput.addEventListener('keyup', () => {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const allCoupons = couponsContainer.querySelectorAll('.coupon');
+
+        allCoupons.forEach(couponDiv => {
+          const couponNumber = couponDiv.getAttribute('data-coupon-number');
+          const couponName = couponDiv.getAttribute('data-coupon-name');
+
+          // Mostra il coupon se il termine di ricerca è vuoto, oppure se corrisponde a numero o nome
+          if (searchTerm === '' || couponNumber.includes(searchTerm) || couponName.includes(searchTerm)) {
+            couponDiv.style.display = 'flex'; // Torna a flex per mantenere il layout
+          } else {
+            couponDiv.style.display = 'none';
+          }
+        });
+      });
+
     });
   </script>
 </body>
 </html>
-
