@@ -26,12 +26,13 @@
       color: #333333; /* Testo generale più scuro per leggibilità */
     }
     h1 {
-      font-family: 'Pacifico', cursive;
+      font-family: 'Balsamiq Sans', cursive, Arial, sans-serif;
       text-align: center;
-      color: #9370DB; /* Viola Allegro per il titolo */
+      color: #333333; /* Testo nero intenso per massima leggibilità */
       font-size: 3.5em;
       margin-bottom: 30px;
-      text-shadow: 3px 3px 6px rgba(0,0,0,0.2), 0 0 10px #FFD700; /* Ombra più pronunciata e bagliore */
+      /* Solo un'ombreggiatura più morbida e generale */
+      text-shadow: 4px 4px 8px rgba(0,0,0,0.4); /* Ombra scura più pronunciata */
     }
     /* Stile per la barra di ricerca */
     #search-container {
@@ -39,20 +40,22 @@
       margin-bottom: 30px;
     }
     #coupon-search {
-      padding: 12px 20px;
-      width: 80%;
-      max-width: 500px;
-      border: 2px solid #FF8C00; /* Arancione Brillante */
-      border-radius: 50px;
-      font-size: 1.1em;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      padding: 18px 30px; /* Aumentato il padding per renderla più alta e larga */
+      width: 90%; /* Aumentato la larghezza */
+      max-width: 650px; /* Aumentato il max-width */
+      border: 4px solid #FF8C00; /* Bordo più spesso: Arancione Brillante */
+      border-radius: 60px; /* Bordi ancora più arrotondati (pill shape) */
+      font-size: 1.5em; /* Testo interno più grande */
+      font-weight: bold; /* Testo interno in grassetto */
+      color: #333333; /* Colore testo interno più scuro */
+      background-color: #FFFFFF; /* Sfondo bianco puro per contrasto */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3), 0 0 0 8px #FFD700; /* Ombra più pronunciata e un "bagliore" giallo intorno */
       outline: none;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      background-color: #FFFFFF; /* Sfondo bianco per il campo di ricerca */
+      transition: all 0.3s ease; /* Transizione più morbida per tutti i cambiamenti */
     }
     #coupon-search:focus {
       border-color: #9370DB; /* Viola Allegro al focus */
-      box-shadow: 0 0 0 4px rgba(147, 112, 219, 0.4); /* Bagliore viola al focus */
+      box-shadow: 0 0 0 8px #9370DB, 0 8px 25px rgba(0,0,0,0.4); /* Bagliore viola e ombra più forte al focus */
     }
 
     #coupons {
@@ -71,7 +74,7 @@
       flex-direction: column;
       margin-bottom: 30px;
       position: relative;
-      transition: all 0.3s ease, filter 0.5s ease;
+      transition: all 0.3s ease; /* Transizioni generali per il coupon */
       transform: rotateZ(var(--rotation, 0deg)); /* Per un leggero effetto "divertente" */
       animation: bounceIn 0.8s ease-out forwards; /* Animazione all'apparizione */
     }
@@ -83,7 +86,6 @@
       100% { transform: scale(1) translateY(0); }
     }
 
-
     .coupon:nth-child(even) { --rotation: 1deg; } /* Lieve rotazione per alcuni coupon */
     .coupon:nth-child(odd) { --rotation: -1deg; }
 
@@ -91,6 +93,8 @@
       transform: scale(1.05) rotateZ(var(--rotation, 0deg)); /* Effetto hover più pronunciato */
       box-shadow: 0 12px 25px rgba(0,0,0,0.4);
     }
+
+    /* Stile per quando il coupon è usato */
     .coupon.used::before {
       content: '✖';
       position: absolute;
@@ -119,11 +123,6 @@
       }
     }
 
-    .coupon.used {
-      opacity: 0.5; /* Più opaco */
-      filter: grayscale(90%) blur(2px); /* Più sfocato e desaturato */
-    }
-
     @keyframes shake {
       0% { transform: translateX(0); }
       25% { transform: translateX(-8px); } /* Shake più evidente */
@@ -147,7 +146,7 @@
       font-family: 'Balsamiq Sans', cursive;
       margin: 5px 0 15px; /* Margine inferiore aumentato */
       font-size: 28px; /* Ancora più grande */
-      color: #333333; /* <<< QUI: Colore nero intenso per il titolo del coupon */
+      color: #333333; /* Colore nero intenso per il titolo del coupon */
       text-shadow: 1px 1px #87CEEB; /* Ombra azzurra per contrasto */
     }
     .offer {
@@ -192,12 +191,18 @@
       font-size: 1.6em; /* Stato ancora più grande */
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      z-index: 11; /* Assicurati che lo status sia sopra la 'X' */
+      position: relative; /* Necessario per z-index */
+      color: #FF8C00; /* Arancione Brillante per maggiore visibilità */
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Ombra per risaltare */
     }
     .status.available {
-      color: #7CFC00; /* Verde Mela */
+      color: #7CFC00; /* Verde Mela - colore originale per disponibile */
+      text-shadow: none; /* Nessuna ombra quando disponibile */
     }
     .status.blocked {
-      color: #FF69B4; /* Rosa Caramella (invece di rosso per coerenza con la palette) */
+      color: #FF8C00; /* Arancione Brillante - più visibile del rosa quando bloccato */
+      /* L'ombra è già definita sopra per tutti gli .status */
     }
 
     .disclaimer {
@@ -230,9 +235,13 @@
         margin-bottom: 20px;
       }
       #coupon-search {
-        width: 90%;
-        padding: 10px 15px;
-        font-size: 1em;
+        padding: 15px 20px; /* Adattato per tablet */
+        font-size: 1.2em; /* Adattato per tablet */
+        border: 3px solid #FF8C00;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.25), 0 0 0 6px #FFD700; /* Ombra e bagliore adattati */
+      }
+      #coupon-search:focus {
+        box-shadow: 0 0 0 6px #9370DB, 0 6px 18px rgba(0,0,0,0.3); /* Adattato al focus */
       }
       #coupons {
         grid-template-columns: repeat(2, 1fr); /* 2 colonne per schermi fino a 768px */
@@ -276,6 +285,15 @@
         h1 {
             font-size: 1.8em; /* Titolo ancora più piccolo per schermi molto stretti */
         }
+        #coupon-search {
+            padding: 12px 18px; /* Adattato per mobile stretto */
+            font-size: 1.1em; /* Adattato per mobile stretto */
+            border: 3px solid #FF8C00;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.2), 0 0 0 5px #FFD700; /* Ombra e bagliore adattati */
+        }
+        #coupon-search:focus {
+            box-shadow: 0 0 0 5px #9370DB, 0 5px 15px rgba(0,0,0,0.25); /* Adattato al focus */
+        }
         #coupons {
             grid-template-columns: 1fr; /* Torna a 1 colonna per schermi molto stretti */
             gap: 20px;
@@ -310,7 +328,7 @@
   <div id="coupons"></div>
 
   <div class="disclaimer">
-    ⚠️ <strong>Regolamento:</strong> Ogni coupon è personale, non cedibile e utilizzabile una sola volta ogni 24 ore per persona.
+    ⚠️ <strong>Regolamento:</strong> Ogni coupon è personale, non cedibile e utilizzabile una sola volta ogni 20 ore per persona.
     In caso di abuso, il Luna Park si riserva il diritto di invalidare i coupon non conformi.
   </div>
 
@@ -322,8 +340,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       const couponsContainer = document.getElementById('coupons');
       const searchInput = document.getElementById('coupon-search');
-      const HOURS = 24;
-      const MS = 60 * 60 * 1000;
+      const HOURS = 20; // Variabile di riferimento per le ore di blocco
+      const MS = 60 * 60 * 1000; // Millisecondi in un'ora
 
       const couponData = [
         { number: 51, name: 'AUTOPISTA', offer: 'PRENDI 2 PAGHI 1' },
@@ -430,11 +448,10 @@
         }
 
         button.addEventListener('click', () => {
-          const confirmUse = confirm(`Sei sicuro di voler usare il coupon ${data.number} - ${data.name}?\nOfferta: ${data.offer}\n\nDopo non potrai riutilizzarlo per 24 ore!`);
+          const confirmUse = confirm(`Sei sicuro di voler usare il coupon ${data.number} - ${data.name}?\nOfferta: ${data.offer}\n\nQuesto coupon sarà bloccato per ${HOURS} ore dopo l'uso.`);
           if (confirmUse) {
             localStorage.setItem(couponKey, Date.now());
             updateStatus();
-            alert(`🎉 Coupon ${data.number} - ${data.name} usato!\nOfferta: ${data.offer}\nBloccato per 24 ore.`);
             div.classList.add('shake');
             div.addEventListener('animationend', () => {
               div.classList.remove('shake');
